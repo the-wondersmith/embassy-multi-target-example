@@ -1,0 +1,125 @@
+[package]
+
+name = "embassy-multi-target-demo"
+version = "0.1.0"
+authors = ["Mark S. <the@wondersmith.dev>"]
+edition = "2021"
+license = "AGPL-3.0-or-later"
+
+
+##########################################################
+#               Core Project Dependencies                #
+##########################################################
+[dependencies]
+
+log = "^0.4"
+defmt = "^0.3"
+anyhow = "^1"
+defmt-rtt = "^0.4"
+panic-probe = { version = "^0.3", features = ["print-defmt"] }
+embassy-futures = { version = "^0.1", git = "https://github.com/embassy-rs/embassy" }
+embassy-macros = { version = "^0.2", git = "https://github.com/embassy-rs/embassy", features = [
+    "rtos-trace-interrupt",
+] }
+embassy-time = { version = "^0.1", git = "https://github.com/embassy-rs/embassy", features = [
+    "defmt",
+    "defmt-timestamp-uptime",
+] }
+embassy-net = { version = "^0.2", git = "https://github.com/embassy-rs/embassy", features = [
+    "std",
+    "dns",
+    "tcp",
+    "udp",
+    "defmt",
+    "dhcpv4",
+    "nightly",
+    "proto-ipv4",
+    "dhcpv4-hostname",
+] }
+embassy-executor = { version = "^0.3", git = "https://github.com/embassy-rs/embassy", features = [
+    "defmt",
+    "arch-std",
+    "arch-xtensa",
+    "arch-cortex-m",
+    "executor-thread",
+    "integrated-timers",
+    "rtos-trace-interrupt",
+] }
+smoltcp = { version = "^0.10", default-features = false, features = [
+    "socket-udp",
+    "proto-igmp",
+    "proto-ipv4",
+    "socket-raw",
+    "socket-tcp",
+    "socket-icmp",
+    "proto-dhcpv4",
+    "socket-dhcpv4",
+    "medium-ethernet",
+] }
+
+
+##########################################################
+#                  Non-μC Dependencies                   #
+##########################################################
+[target.x86_64-apple-darwin]
+
+embassy-embedded-hal = { version = "^0.1", git = "https://github.com/embassy-rs/embassy", features = [
+    "std",
+    "time",
+    "nightly",
+] }
+
+
+##########################################################
+#              RP2040-Specific Dependencies               #
+##########################################################
+[target.thumbv6m-none-eabi.dependencies]
+
+cortex-m-rt = "^0.7"
+cortex-m = { version = "^0.7", features = ["critical-section-single-core"] }
+embassy-rp = { version = "0.1.0", git = "https://github.com/embassy-rs/embassy", features = [
+    "rt",
+    "defmt",
+    "nightly",
+    "intrinsics",
+    "time-driver",
+    "unstable-pac",
+    "rom-func-cache",
+    "unstable-traits",
+] }
+
+##########################################################
+#              ESP32-Specific Dependencies                #
+##########################################################
+[target.xtensa-esp32-none-elf.dependencies]
+
+esp-println = { version = "^0.6", git = "https://github.com/esp-rs/esp-println", default-features = false, features = [
+    "log",
+    "esp32",
+] }
+esp32-hal = { version = "^0.15", git = "https://github.com/esp-rs/esp-hal", default-features = false, features = [
+    "log",
+    "async",
+    "embassy",
+    "vectored",
+    "embassy-time-timg0",
+    "embassy-executor-thread",
+    "embassy-executor-interrupt",
+] }
+esp-wifi = { version = "^0.1", git = "https://github.com/esp-rs/esp-wifi", default-features = false, features = [
+    "log",
+    "wifi",
+    "async",
+    "esp32",
+    "utils",
+    "esp-now",
+    "wifi-logs",
+    "embassy-net",
+    "embedded-svc",
+] }
+esp-backtrace = { version = "^0.8", default-features = false, features = [
+    "esp32",
+    "print-uart",
+    "panic-handler",
+    "exception-handler",
+] }
